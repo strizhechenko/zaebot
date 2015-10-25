@@ -49,16 +49,10 @@ def get_words(reader):
     return words[:3]
 
 
-def tweet_zaeb_word(word, writer):
-    tweet_text = "%s %s" % (zaeb(word), word)
-    print tweet_text.encode('utf-8')
-    writer.tweet(tweet_text)
-
-
 if __name__ == '__main__':
     writer = TwiBot(user='twibot')
     reader = TwiBot(user='grabber')
     while True:
         for word in get_words(reader):
-            tweet_zaeb_word(word, writer)
+            writer.tweet(tweet_text = "%s %s" % (zaeb(word), word))
         time.sleep(randint(1, 60) * 60)        
