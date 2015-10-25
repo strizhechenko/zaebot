@@ -52,5 +52,5 @@ if __name__ == '__main__':
     reader = TwiBot(user='grabber')
     while True:
         for word in get_words(reader):
-            writer.tweet(tweet_text = "%s %s" % (zaeb(word), word))
+            writer.tweet("%s %s" % (zaeb(word), word))
         time.sleep(randint(1, 60) * 60)        
