@@ -2,12 +2,10 @@
 
 __author__ = "@strizhechenko"
 
-import tweepy
-from tweet import TwiBot
-import re
-import pymorphy2
+import re, time
 from random import shuffle, randint
-import time
+from tweet import TwiBot
+import pymorphy2
 
 morph = pymorphy2.MorphAnalyzer()
 parsed_zaeb = morph.parse(u'заебать')[0]
