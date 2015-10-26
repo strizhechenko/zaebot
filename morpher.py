@@ -8,12 +8,14 @@ class Morpher(MorphAnalyzer):
 
     def __init__(self):
         super(Morpher, self).__init__()
-        self.parsed_zaeb = self.parse(u'заебать')[0]
+        self.zaebat = self.parse(u'заебать')[0]
+        self.genders = ('neut', 'femn', 'masc')
 
-    def nouns(self, words):
-        is_noun = lambda w: not [
-            i for i in self.parse(w) if 'NOUN' not in i.tag]
-        return filter(is_noun, words)
+    def is_noun(self, word):
+        for w in self.parse(word):
+            if 'NOUN' not in w.tag:
+                return False
+        return True
 
     def normalize_word(self, word):
         parsed = self.parse(word)
@@ -27,15 +29,15 @@ class Morpher(MorphAnalyzer):
         gender = w.tag.gender
         if w.tag.number == 'plur':
             return u'Заебали'
-        if gender in ('neut', 'femn', 'masc'):
-            return self.parsed_zaeb.inflect(set([gender])).word
+        if gender in self.genders:
+            return self.zaebat.inflect(set([gender])).word
         return u'Заебись'
 
-    def ru_only(self, string):
+    def __ru_only__(self, string):
         return set(map(unicode.lower, re.findall(u'[А-Яа-я]+', string)))
 
     def process_to_words(self, string):
-        words = self.nouns(self.ru_only(string))
+        words = filter(self.is_noun, self.__ru_only__(string))
         normal_words = map(self.normalize_word, words)
         shuffle(normal_words)
         return normal_words[:3]

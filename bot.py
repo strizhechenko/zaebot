@@ -1,8 +1,6 @@
-# coding: utf-8
-
 __author__ = "@strizhechenko"
 
-import time
+from time import sleep
 from random import randint
 from tweet import TwibotWriter, TwibotReader
 from morpher import Morpher
@@ -13,18 +11,18 @@ class Zaebot():
     def __init__(self):
         self.writer = TwibotWriter(user='writer')
         self.reader = TwibotReader(user='reader')
-        self.morph = Morpher()
+        self.morphy = Morpher()
 
-    def get_words(self):
-        string = " ".join(map(lambda tw: tw.text, self.reader.fetch()))
-        return self.morph.process_to_words(string)
+    def __get_words__(self):
+        tweets = self.reader.fetch()
+        string = " ".join(map(lambda tweet: tweet.text, tweets))
+        return self.morphy.process_to_words(string)
 
     def loop(self):
         while True:
-            for word in self.get_words():
-                self.writer.tweet(self.morph.word2phrase(word))
-            time.sleep(randint(1, 2) * 60)
+            for word in self.__get_words__():
+                self.writer.tweet(self.morphy.word2phrase(word))
+            sleep(randint(5, 30) * randint(15, 60))
 
 if __name__ == '__main__':
-    bot = Zaebot()
-    bot.loop()
+    Zaebot().loop()
