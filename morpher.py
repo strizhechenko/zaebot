@@ -33,11 +33,11 @@ class Morpher(MorphAnalyzer):
             return self.zaebat.inflect(set([gender])).word
         return u'Заебись'
 
-    def __ru_only__(self, string):
+    def ru_only(self, string):
         return set(map(unicode.lower, re.findall(u'[А-Яа-я]+', string)))
 
     def process_to_words(self, string):
-        words = filter(self.is_noun, self.__ru_only__(string))
+        words = filter(self.is_noun, self.ru_only(string))
         normal_words = map(self.normalize_word, words)
         shuffle(normal_words)
         return normal_words[:3]
