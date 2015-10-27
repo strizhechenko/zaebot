@@ -22,7 +22,7 @@ class Zaebot():
         while True:
             for word in self.__get_words__():
                 self.writer.tweet(self.morphy.word2phrase(word))
-            sleep(randint(5, 30) * randint(15, 60))
+            sleep(randint(15, 30) * randint(30, 60))
 
 if __name__ == '__main__':
     Zaebot().loop()
