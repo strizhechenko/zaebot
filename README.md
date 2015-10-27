@@ -14,4 +14,5 @@
 
 ## usage
 После вбивания параметров в конфиг:
-cd папка_с_проектом && setsid python bot.py &>/dev/null & disown -a
+
+    cd папка_с_проектом && setsid python bot.py &>/dev/null & disown -a
