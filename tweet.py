@@ -23,10 +23,10 @@ class Twibot():
 class TwibotReader(Twibot):
 
     def fetch(self, count=3):
-        return self.api.home_timeline(count)
+        return self.api.home_timeline(count=count)
 
 
-class TwibotWriter(Twibot):
+class TwibotWriter(TwibotReader):
 
     def tweet(self, tweet):
         if len(tweet) <= 140 and len(tweet) > 0:
@@ -34,8 +34,14 @@ class TwibotWriter(Twibot):
                 self.api.update_status(tweet)
                 return True
             except TweepError as err:
-                print 'Duplicate or error', err
+                print err
         return False
+
+    def wipe(self):
+        new_tweets = 30
+        for tweet in self.fetch(200)[new_tweets:]:
+            if tweet.favorite_count == 0 and tweet.retweet_count == 0:
+                tweet.destroy()
 
 
 if __name__ == '__main__':
