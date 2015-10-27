@@ -40,7 +40,7 @@ class Morpher(MorphAnalyzer):
         words = filter(self.is_noun, self.ru_only(string))
         normal_words = map(self.normalize_word, words)
         shuffle(normal_words)
-        return normal_words[:3]
+        return normal_words[:1]
 
     def word2phrase(self, word):
         return "%s %s" % (self.zaeb(word), word)
