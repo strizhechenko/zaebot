@@ -16,3 +16,7 @@
 После вбивания параметров в конфиг:
 
     cd папка_с_проектом && setsid python bot.py &>/dev/null & disown -a
+
+## первое воплощение
+
+https://twitter.com/vsevsezaebali
