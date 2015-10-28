@@ -26,6 +26,9 @@ class TwibotReader(Twibot):
         return self.api.home_timeline(count=count)
 
 
+    def fetch_list(self, list_id, count=3):
+        return self.api.list_timeline(list_id=list_id)
+
 class TwibotWriter(TwibotReader):
 
     def tweet(self, tweet):
