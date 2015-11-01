@@ -1,3 +1,4 @@
+# coding: utf-8
 __author__ = "@strizhechenko"
 
 from time import sleep
@@ -13,21 +14,29 @@ class Zaebot():
         self.reader = TwibotReader(user='reader')
         self.morphy = Morpher()
 
-    def __get_words__(self):
-        tweets = self.reader.fetch()
-        string = " ".join([ tweet.text for tweet in tweets ])
-        return self.morphy.process_to_words(string)
+    def get_words(self, count=1):
+        tweets = self.reader.fetch(count=100)
+        string = " ".join([tweet.text for tweet in tweets])
+        return self.morphy.process_to_words(string, count)
+
+    def loop_body(self):
+        words1 = self.get_words(200)
+        words2 = self.get_words(200)
+        # self.writer.tweet(self.morphy.word2phrase(word))
+        for i in xrange(150):
+            print ("%s-%s %s" % ( words1[i], words2[i], u'из открытого космоса' )).encode('utf-8')
+        # self,morphy.word2phrase(word)
+
 
     def loop(self):
         tweet_count = 0
         while True:
-            for word in self.__get_words__():
-                self.writer.tweet(self.morphy.word2phrase(word))
-                tweet_count+=1
+            self.loop_body()
+            tweet_count+=1
             if tweet_count > 100:
                 tweet_count = 0
                 self.writer.wipe()
             sleep(randint(15, 30) * randint(30, 60))
 
 if __name__ == '__main__':
-    Zaebot().loop()
+    Zaebot().loop_body()

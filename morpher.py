@@ -33,14 +33,15 @@ class Morpher(MorphAnalyzer):
             return self.zaebat.inflect(set([gender])).word
         return u'Заебись'
 
-    def ru_only(self, string):
+    @staticmethod
+    def ru_only(string):
         return set(map(unicode.lower, re.findall(u'[А-Яа-я]+', string)))
 
-    def process_to_words(self, string):
+    def process_to_words(self, string, count=1):
         words = filter(self.is_noun, self.ru_only(string))
         normal_words = map(self.normalize_word, words)
         shuffle(normal_words)
-        return normal_words[:1]
+        return normal_words[:count]
 
     def word2phrase(self, word):
         return "%s %s" % (self.zaeb(word), word)
