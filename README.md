@@ -17,6 +17,7 @@
 
     cd папка_с_проектом && setsid python bot.py &>/dev/null & disown -a
 
-## первое воплощение
+## Воплощения:
 
-https://twitter.com/vsevsezaebali
+- https://twitter.com/vsevsezaebali - читает ленту https://twitter.com/strizhechenko
+- https://twitter.com/memes_zaebot - читает список https://twitter.com/strizhechenko/lists/memes-zaebali/members
