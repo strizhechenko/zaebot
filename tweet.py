@@ -38,6 +38,7 @@ class Twibot():
             app, user = self.conf_dict_from_env(user)
         else:
             app, user = self.conf_dict_from_config_file('config.ini', user)
+        print app, user
         self.api = self.conf_dict_to_api(app, user)
 
 
