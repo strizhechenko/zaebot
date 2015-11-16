@@ -1,0 +1,3 @@
+tweepy
+pymorphy2
+pymorphy2-dicts
