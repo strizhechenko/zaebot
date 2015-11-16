@@ -9,8 +9,8 @@ from morpher import Morpher
 class Zaebot():
 
     def __init__(self):
-        self.writer = TwibotWriter(user='writer')
-        self.reader = TwibotReader(user='reader')
+        self.writer = TwibotWriter(config='env', user='writer')
+        self.reader = TwibotReader(config='env', user='reader')
         self.morphy = Morpher()
 
     def __get_words__(self):

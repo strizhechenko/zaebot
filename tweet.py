@@ -1,4 +1,5 @@
 # coding: utf-8
+import os
 import sys
 from tweepy import OAuthHandler, API, TweepError
 from ConfigParser import ConfigParser
@@ -6,18 +7,38 @@ from ConfigParser import ConfigParser
 
 class Twibot():
 
-    def conf2api(self, config='config.ini', user='writer'):
+    @staticmethod
+    def conf_dict_from_env(user='writer'):
+        app = {
+            'consumer_key': os.environ.get('consumer_key'),
+            'consumer_secret': os.environ.get('consumer_secret'),
+        }
+        user = {
+            'access_token': os.environ.get(user + '_access_token'),
+            'access_secret': os.environ.get(user + '_access_secret'),
+        }
+        return app, user
+
+    def conf_dict_from_config_file(self, config='config.ini', user='writer'):
         with open(config) as f:
             c = ConfigParser()
             c.readfp(f)
         app = dict(c.items('app'))
         user = dict(c.items(user))
+        return app, user
+
+    @staticmethod
+    def conf_dict_to_api(app, user):
         auth = OAuthHandler(app['consumer_key'], app['consumer_secret'])
         auth.set_access_token(user['access_token'], user['access_secret'])
         return API(auth)
 
-    def __init__(self, user='writer'):
-        self.api = self.conf2api(user=user)
+    def __init__(self, user='writer', config='env'):
+        if config == 'env':
+            app, user = self.conf_dict_from_env(user)
+        else:
+            app, user = self.conf_dict_from_config_file('config.ini', user)
+        self.api = self.conf_dict_to_api(app, user)
 
 
 class TwibotReader(Twibot):
