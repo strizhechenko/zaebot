@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 __author__ = "@strizhechenko"
 
 from time import sleep
@@ -16,15 +16,16 @@ class Zaebot():
 
     def __get_words__(self):
         tweets = self.reader.fetch()
-        string = u" ".join([ tweet.text for tweet in tweets ])
+        string = " ".join([tweet.text for tweet in tweets])
         return self.morphy.process_to_words(string)
 
     def loop(self):
         tweet_count = 0
         while True:
             for word in self.__get_words__():
-                self.writer.tweet(self.morphy.word2phrase(word))
-                tweet_count+=1
+                tweet = self.morphy.word2phrase(word)
+                self.writer.tweet(tweet)
+                tweet_count += 1
             if tweet_count > 100:
                 tweet_count = 0
                 self.writer.wipe()
