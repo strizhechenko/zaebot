@@ -17,6 +17,9 @@ class Twibot():
             'access_token': os.environ.get(user + '_access_token'),
             'access_secret': os.environ.get(user + '_access_secret'),
         }
+        for d in (app, user,):
+            if None in d.values():
+                raise ValueError('bad config %s' % d)
         return app, user
 
     def conf_dict_from_config_file(self, config='config.ini', user='writer'):
