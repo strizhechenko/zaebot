@@ -8,6 +8,7 @@ sched = BlockingScheduler()
 
 phrase = u'ебаться надо'
 replacement = u'программировать надо'
+
 phrase_correct = lambda tweet: phrase in tweet
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
