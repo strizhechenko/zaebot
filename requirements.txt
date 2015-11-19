@@ -9,3 +9,4 @@ requests-oauthlib==0.4.2
 setuptools==8.2.1
 six==1.9.0
 tweepy==3.1.0
+APScheduler==3.0.0
