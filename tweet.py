@@ -28,7 +28,7 @@ class Twibot():
         return API(auth)
 
     def __init__(self):
-        app, user = self.conf_dict_from_env(user)
+        app, user = self.conf_dict_from_env()
         self.api = self.conf_dict_to_api(app, user)
 
 
