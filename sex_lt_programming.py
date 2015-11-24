@@ -56,11 +56,13 @@ def process_tweet(tweet, replaces, hashes):
         tweet = tweet.replace(word, replace)
     if tweet_original == tweet:
         return
+    if len(tweet) > 140:
+        print 'too long :( :', tweet
+        return
     tweet = tweet.encode('utf-8')
     tweet_hash = md5(tweet).hexdigest()
     if tweet_hash in hashes:
         return
-    print tweet
     bot.tweet(tweet)
 
 
