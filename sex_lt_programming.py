@@ -4,6 +4,7 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from tweet import Twibot
 from hashlib import md5
+import sys
 
 bot = Twibot()
 sched = BlockingScheduler()
@@ -68,4 +69,8 @@ def do_tweets():
             process_tweet(tweet, replaces, hashes)
 
 
-sched.start()
+if __name__ == '__main__':
+    if '--test' in sys.argv:
+        do_tweets
+    else:
+        sched.start()
