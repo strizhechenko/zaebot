@@ -13,6 +13,12 @@ not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
 
 replacements = {
+    u'сосать хуи': {
+        u'сосать хуи': u'программировать',
+    },
+    u'сосать хуй': {
+        u'сосать хуй': u'программировать',
+    },
     u'ебаться надо': {
         u'ебаться': u'программировать',
     },
@@ -45,8 +51,11 @@ def get_hashes():
 
 def process_tweet(tweet, replaces, hashes):
     """ обрабатываем полученные твиты и постим новые """
+    tweet_original = tweet
     for word, replace in replaces.items():
         tweet = tweet.replace(word, replace)
+    if tweet_original == tweet:
+        return
     tweet = tweet.encode('utf-8')
     tweet_hash = md5(tweet).hexdigest()
     if tweet_hash in hashes:
