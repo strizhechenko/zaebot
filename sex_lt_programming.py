@@ -117,7 +117,7 @@ def do_tweets():
 
 
 if __name__ == '__main__':
+    do_tweets()
     if '--test' in sys.argv:
-        do_tweets()
-    else:
-        sched.start()
+        exit(0)
+    sched.start()
