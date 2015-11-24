@@ -71,7 +71,7 @@ def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     hashes = get_hashes()
     for phrase, replaces in replacements.items():
-        tweets = bot.api.search(phrase, count=10)
+        tweets = bot.api.search(phrase, count=20)
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
         for tweet in tweets_text:
