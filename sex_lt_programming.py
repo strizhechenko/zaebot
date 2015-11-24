@@ -53,7 +53,7 @@ def process_tweet(tweet, replaces, hashes):
     hasher.update(tweet)
     if hasher.hexdigest() in hashes:
         return
-    print tweet.encode('utf-8')
+    print tweet
     bot.tweet(tweet)
 
 
