@@ -102,7 +102,7 @@ def process_tweet(tweet, replaces, hashes):
     bot.tweet(tweet)
 
 
-@sched.scheduled_job('interval', minutes=60)
+@sched.scheduled_job('interval', minutes=15)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     hashes = get_hashes()
