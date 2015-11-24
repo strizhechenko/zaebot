@@ -91,6 +91,8 @@ def process_tweet(tweet, replaces, hashes):
     if tweet_original == tweet:
         return
     if len(tweet) > 140:
+        if isinstance(tweet, unicode):
+            tweet = tweet.encode('utf-8')
         print 'too long :( :', tweet
         return
     tweet = tweet.encode('utf-8')
