@@ -20,6 +20,10 @@ blacklist = (
     u'как часто',
     u'психологи узнали',
     u'психологи выяснили',
+    u'http://',
+    u'https://',
+    u'.com',
+    u't.co',
 )
 
 replacements = {
