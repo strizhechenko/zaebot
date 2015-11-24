@@ -53,6 +53,7 @@ def process_tweet(tweet, replaces, hashes):
     hasher.update(tweet)
     if hasher.hexdigest() in hashes:
         return
+    print tweet.encode('utf-8')
     bot.tweet(tweet)
 
 
@@ -61,7 +62,6 @@ def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     hashes = get_hashes()
     for phrase, replaces in replacements.items():
-        print phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=10)
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
