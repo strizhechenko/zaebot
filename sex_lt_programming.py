@@ -51,7 +51,11 @@ def process_tweet(tweet, replaces, hashes):
         tweet = tweet.replace(word, replace)
     tweet = tweet.encode('utf-8')
     hasher.update(tweet)
-    if hasher.hexdigest() in hashes:
+    tweet_hash = hasher.hexdigest()
+    print tweet_hash
+    print hashes
+    print tweet_hash in hashes
+    if tweet_hash in hashes:
         return
     print tweet
     bot.tweet(tweet)
