@@ -8,7 +8,6 @@ import sys
 
 bot = Twibot()
 sched = BlockingScheduler()
-hasher = md5()
 
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
@@ -40,8 +39,7 @@ def get_hashes():
     me = bot.api.me()
     timeline = me.timeline(count=200)
     for tweet in [t.text for t in timeline]:
-        hasher.update(tweet.encode('utf-8'))
-        hashes.append(hasher.hexdigest())
+        hashes.append(md5(tweet.encode('utf-8')).hexdigest())
     return list(set(hashes))
 
 
@@ -50,11 +48,7 @@ def process_tweet(tweet, replaces, hashes):
     for word, replace in replaces.items():
         tweet = tweet.replace(word, replace)
     tweet = tweet.encode('utf-8')
-    hasher.update(tweet)
-    tweet_hash = hasher.hexdigest()
-    print tweet_hash
-    print hashes
-    print tweet_hash in hashes
+    tweet_hash = md5(tweet).hexdigest()
     if tweet_hash in hashes:
         return
     print tweet
