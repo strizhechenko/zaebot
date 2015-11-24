@@ -12,6 +12,16 @@ sched = BlockingScheduler()
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
 
+blacklist = (
+    u'учёные выяснили',
+    u'ученые выяснили',
+    u'учёные узнали',
+    u'ученые узнали',
+    u'как часто',
+    u'психологи узнали',
+    u'психологи выяснили',
+)
+
 replacements = {
     u'сосать хуи': {
         u'сосать хуи': u'программировать',
@@ -38,6 +48,11 @@ replacements = {
     },
 }
 
+def not_blacklisted(tweet):
+    for phrase in blacklist:
+        if phrase in tweet:
+            return False
+    return True
 
 def get_hashes():
     """ хэшики последних 200 своих твитов """
@@ -74,6 +89,7 @@ def do_tweets():
         tweets = bot.api.search(phrase, count=20)
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
+        tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in tweets_text:
             process_tweet(tweet, replaces, hashes)
 
