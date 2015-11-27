@@ -4,6 +4,7 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from tweet import Twibot
 from hashlib import md5
+from time import sleep
 import sys
 
 bot = Twibot()
@@ -113,6 +114,7 @@ def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     hashes = get_hashes()
     for phrase, replaces in replacements.items():
+        sleep(60)
         print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
         tweets_text = map(tweet_to_text, tweets)
