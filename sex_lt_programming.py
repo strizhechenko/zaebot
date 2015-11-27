@@ -27,6 +27,12 @@ blacklist = (
 )
 
 replacements = {
+    u'ебаться надо так чтобы': {
+        u'ебаться': u'программировать',
+    },
+    u'ебаться нужно так чтобы': {
+        u'ебаться': u'программировать',
+    },
     u'сосать хуи': {
         u'сосать хуи': u'программировать',
         u'хуи сосать': u'программировать',
@@ -108,7 +114,7 @@ def do_tweets():
     hashes = get_hashes()
     for phrase, replaces in replacements.items():
         print '# search:', phrase.encode('utf-8')
-        tweets = bot.api.search(phrase, count=20, result_type='recent')
+        tweets = bot.api.search(phrase, count=200, result_type='recent')
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
         tweets_text = filter(not_blacklisted, tweets_text)
