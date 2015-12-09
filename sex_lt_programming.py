@@ -14,6 +14,7 @@ not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
 
 blacklist = (
+    u'выпущено 24 кролика',
     u'учёные выяснили',
     u'ученые выяснили',
     u'учёные узнали',
