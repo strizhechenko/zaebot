@@ -85,7 +85,7 @@ def process_tweet(tweet, replaces, hashes):
     bot.tweet(tweet)
 
 
-@sched.scheduled_job('interval', minutes=15)
+@sched.scheduled_job('interval', minutes=60)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     print u'тянем нужные твиты и скармливаем постилке'
