@@ -5,7 +5,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from tweet import Twibot
 from hashlib import md5
 from time import sleep
-import sys
+import sys, re
 
 bot = Twibot()
 sched = BlockingScheduler()
@@ -73,6 +73,8 @@ def process_tweet(tweet, replaces, hashes):
         tweet = tweet.replace(word, replace)
     if tweet_original == tweet:
         return
+    if 'http' in tweet:
+        tweet = re.sub(r'http[^\s\t]+', '', tweet)
     if len(tweet) > 140:
         if isinstance(tweet, unicode):
             tweet = tweet.encode('utf-8')
