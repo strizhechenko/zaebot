@@ -10,12 +10,11 @@ from morpher import Morpher
 class Zaebot():
 
     def __init__(self):
-        self.writer = TwibotWriter(config='env', user='writer')
-        self.reader = TwibotReader(config='env', user='reader')
+        self.bot = Twibot()
         self.morphy = Morpher()
 
     def __get_words__(self):
-        tweets = self.reader.fetch()
+        tweets = self.bot.fetch()
         string = " ".join([tweet.text for tweet in tweets])
         return self.morphy.process_to_words(string)
 
@@ -24,11 +23,11 @@ class Zaebot():
         while True:
             for word in self.__get_words__():
                 tweet = self.morphy.word2phrase(word)
-                self.writer.tweet(tweet)
+                self.bot.tweet(tweet)
                 tweet_count += 1
             if tweet_count > 100:
                 tweet_count = 0
-                self.writer.wipe()
+                self.bot.wipe()
             sleep(randint(15, 30) * randint(30, 60))
 
 if __name__ == '__main__':
