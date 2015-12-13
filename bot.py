@@ -14,7 +14,7 @@ class Zaebot():
         self.morphy = Morpher()
 
     def __get_words__(self):
-        tweets = self.bot.fetch()
+        tweets = self.bot.fetch(count=40)
         string = " ".join([tweet.text for tweet in tweets])
         return self.morphy.process_to_words(string)
 
