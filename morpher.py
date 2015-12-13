@@ -43,4 +43,4 @@ class Morpher(MorphAnalyzer):
         return normal_words[:1]
 
     def word2phrase(self, word):
-        return "%s %s" % (self.zaeb(word), word)
+        return "%s %s" % (word, u'- это когда тебя в жопу ебут')
