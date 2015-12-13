@@ -3,7 +3,7 @@ __author__ = "@strizhechenko"
 
 from time import sleep
 from random import randint
-from tweet import TwibotWriter, TwibotReader
+from tweet import Twibot
 from morpher import Morpher
 
 
