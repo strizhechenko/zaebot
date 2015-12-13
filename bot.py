@@ -22,6 +22,9 @@ class Zaebot():
         tweet_count = 0
         while True:
             print u'Начало итерации'
+            words = self.__get_words__()
+            if not words:
+                print u'Нет слов'
             for word in self.__get_words__():
                 print u'Слово: ', word
                 tweet = self.morphy.word2phrase(word)
