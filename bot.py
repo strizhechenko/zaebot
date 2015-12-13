@@ -15,6 +15,7 @@ class Zaebot():
 
     def __get_words__(self):
         tweets = self.bot.fetch(count=40)
+        print len(tweets)
         string = " ".join([tweet.text for tweet in tweets])
         print string.encode('utf-8')
         return self.morphy.process_to_words(string)
