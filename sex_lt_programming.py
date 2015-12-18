@@ -99,6 +99,7 @@ def do_tweets():
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in tweets_text:
             process_tweet(tweet, replaces, hashes)
+            sleep(2)
 
 
 if __name__ == '__main__':
