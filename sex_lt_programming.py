@@ -83,7 +83,9 @@ def process_tweet(tweet, replaces, hashes):
     tweet_hash = md5(tweet).hexdigest()
     if tweet_hash in hashes:
         return
-    bot.tweet(tweet)
+    if not bot.tweet(tweet):
+        print 'failed', tweet
+
 
 
 @sched.scheduled_job('interval', minutes=15)
