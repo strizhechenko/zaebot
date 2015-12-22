@@ -69,7 +69,7 @@ def process_tweet(tweet, replaces, hashlist):
         return
     if isinstance(replaced_tweet, unicode):
         replaced_tweet = replaced_tweet.encode('utf-8')
-    if len(replaced_tweet) > 140:
+    if len(replaced_tweet) > 140*2 - 5: # something wtf after encode
         print 'too long :( :', len(replaced_tweet), '__', replaced_tweet, '__'
         return
     if get_hash(replaced_tweet) in hashlist:
