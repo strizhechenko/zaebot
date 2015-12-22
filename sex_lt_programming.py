@@ -60,11 +60,12 @@ def get_hashes():
     return list(set(hashlist))
 
 
-def process_tweet(tweet, replaces, hashlist):
+def process_tweet(tweet, hashlist):
     """ обрабатываем полученные твиты и постим новые """
     replaced_tweet = tweet
-    for word, replace in replaces.items():
-        replaced_tweet = replaced_tweet.replace(word, replace)
+    for replaces in replacements.values():
+        for word, replace in replaces.items():
+            replaced_tweet = replaced_tweet.replace(word, replace)
     if replaced_tweet == tweet:
         return
     if isinstance(replaced_tweet, unicode):
@@ -91,7 +92,7 @@ def do_tweets():
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in list(set(tweets_text)):
-            process_tweet(tweet, replaces, hashes)
+            process_tweet(tweet, hashes)
 
 
 if __name__ == '__main__':
