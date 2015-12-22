@@ -88,7 +88,7 @@ def do_tweets():
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
         tweets_text = filter(not_blacklisted, tweets_text)
-        for tweet in tweets_text:
+        for tweet in list(set(tweets_text)):
             process_tweet(tweet, replaces, hashes)
             sleep(10)
 
