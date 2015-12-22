@@ -80,9 +80,10 @@ def process_tweet(tweet, hashlist):
     sleep(10)
 
 
-@sched.scheduled_job('interval', minutes=15)
+@sched.scheduled_job('interval', minutes=30)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
+    print "New tick"
     hashes.extend(get_hashes())
     for phrase, replaces in replacements.items():
         sleep(10)
