@@ -4,6 +4,7 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from tweet import Twibot
 from hashlib import md5
+from time import sleep
 import sys
 
 bot = Twibot()
@@ -11,8 +12,10 @@ sched = BlockingScheduler()
 
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
+hashes = []
 
 blacklist = (
+    u'выпущено 24 кролика',
     u'учёные выяснили',
     u'ученые выяснили',
     u'учёные узнали',
@@ -27,49 +30,25 @@ blacklist = (
 )
 
 replacements = {
-    u'ебаться надо так чтобы': {
+    u'ебутся': {
+        u'ебутся': u'программируют',
+    },
+    u'ебаться': {
         u'ебаться': u'программировать',
     },
-    u'ебаться нужно так чтобы': {
-        u'ебаться': u'программировать',
-    },
-    u'сосать хуи': {
-        u'сосать хуи': u'программировать',
-        u'хуи сосать': u'программировать',
-    },
-    u'сосать хуй': {
-        u'сосать хуй': u'программировать',
-        u'хуй сосать': u'программировать',
-    },
-    u'ебаться надо': {
-        u'ебаться': u'программировать',
-    },
-    u'ебаться нужно': {
-        u'ебаться': u'программировать',
-        u'нужно': u'надо',
+    u'трахаться': {
+        u'трахаться': u'программировать',
     },
     u'в сексе главное': {
         u'сексе':   u'программировании',
     },
-    u'трахаться надо': {
-        u'трахаться': u'программировать',
-    },
-    u'трахаться нужно': {
-        u'трахаться': u'программировать',
-        u'нужно': u'надо',
-    },
-    u'заниматься сексом надо': {
+    u'заниматься сексом': {
         u'заниматься сексом': u'программировать',
         u'сексом заниматься': u'программировать',
     },
-    u'заниматься сексом нужно': {
-        u'заниматься сексом': u'программировать',
-        u'сексом заниматься': u'программировать',
-        u'нужно': u'надо',
-    },
-    u'ебаться в жопу': {
-        u'ебаться': u'пушить',
-        u'в жопу': u'с форсом',
+    u'покажите сиськи': {
+        u'покажите': u'откройте',
+        u'сиськи': u'исходники',
     },
 }
 
@@ -111,8 +90,9 @@ def process_tweet(tweet, replaces, hashes):
 @sched.scheduled_job('interval', minutes=15)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
-    hashes = get_hashes()
+    hashes.extend(get_hashes())
     for phrase, replaces in replacements.items():
+        sleep(60)
         print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
         tweets_text = map(tweet_to_text, tweets)
@@ -120,10 +100,12 @@ def do_tweets():
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in tweets_text:
             process_tweet(tweet, replaces, hashes)
+            sleep(2)
 
 
 if __name__ == '__main__':
     do_tweets()
     if '--test' in sys.argv:
+        do_tweets()
         exit(0)
     sched.start()

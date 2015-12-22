@@ -42,7 +42,9 @@ class Twibot():
                 self.api.update_status(tweet)
                 return True
             except TweepError as err:
-                print err
+                print tweet, err
+            except Exception as err:
+                pass
         return False
 
     def wipe(self):
