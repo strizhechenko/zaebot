@@ -54,7 +54,8 @@ def get_hash(tweet):
 def get_hashes():
     """ хэшики последних 200 своих твитов """
     hashlist = []
-    for tweet in [t.text.encode('utf-8') for t in bot.api.me().timeline(count=200)]:
+    tweets = list(set(bot.api.me().timeline(count=200)))
+    for tweet in [t.text.encode('utf-8') for t in tweets]:
         hashlist.append(get_hash(tweet))
     return list(set(hashlist))
 
