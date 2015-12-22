@@ -37,13 +37,15 @@ class Twibot():
 
 
     def tweet(self, tweet):
-        if len(tweet) <= 140 and len(tweet) > 0:
+        # 260 because encode('utf-8')
+        if len(tweet) <= 260 and len(tweet) > 0:
             try:
                 self.api.update_status(tweet)
                 return True
             except TweepError as err:
                 print tweet, err
             except Exception as err:
+                print "cant log exception"
                 pass
         return False
 
