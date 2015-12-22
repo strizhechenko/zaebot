@@ -94,6 +94,7 @@ def do_tweets():
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in list(set(tweets_text)):
             process_tweet(tweet, hashes)
+    print "Tick end, wait about 30 min"
 
 
 if __name__ == '__main__':
