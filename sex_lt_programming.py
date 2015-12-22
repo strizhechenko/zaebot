@@ -74,6 +74,7 @@ def process_tweet(tweet, replaces, hashlist):
         return
     if get_hash(replaced_tweet) in hashlist:
         return
+    print 'post:', replaced_tweet
     bot.tweet(replaced_tweet)
     sleep(10)
 
@@ -83,7 +84,7 @@ def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
     hashes.extend(get_hashes())
     for phrase, replaces in replacements.items():
-        sleep(60)
+        sleep(10)
         print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
         tweets_text = map(tweet_to_text, tweets)
