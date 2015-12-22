@@ -12,6 +12,7 @@ sched = BlockingScheduler()
 
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
 tweet_to_text = lambda tweet: tweet.text.lower()
+hashes = []
 
 blacklist = (
     u'выпущено 24 кролика',
@@ -89,7 +90,7 @@ def process_tweet(tweet, replaces, hashes):
 @sched.scheduled_job('interval', minutes=15)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
-    hashes = get_hashes()
+    hashes.extend(get_hashes())
     for phrase, replaces in replacements.items():
         sleep(60)
         print '# search:', phrase.encode('utf-8')
