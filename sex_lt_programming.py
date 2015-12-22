@@ -75,6 +75,7 @@ def process_tweet(tweet, replaces, hashlist):
     if get_hash(replaced_tweet) in hashlist:
         return
     bot.tweet(replaced_tweet)
+    sleep(10)
 
 
 @sched.scheduled_job('interval', minutes=15)
@@ -90,7 +91,6 @@ def do_tweets():
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in list(set(tweets_text)):
             process_tweet(tweet, replaces, hashes)
-            sleep(10)
 
 
 if __name__ == '__main__':
