@@ -1,1 +1,1 @@
-worker: python -u sex_lt_programming.py
+worker: python -u bot.py
