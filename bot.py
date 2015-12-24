@@ -75,7 +75,11 @@ def get_hashes(tweets=None):
     if not (tweets and isinstance(tweets, list)):
         return []
     if isinstance(tweets[0], tweepy.models.Status):
+        print "get_hashes: Status"
         hashlist.extend([get_hash(t.text.encode('utf-8')) for t in tweets])
+    if isinstance(tweets[0], unicode):
+        print "get_hashes: unicode"
+        hashlist.extend([get_hash(t.encode('utf-8')) for t in tweets])
     return list(set(hashlist))
 
 
