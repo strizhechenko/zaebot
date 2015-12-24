@@ -3,6 +3,7 @@
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from tweet import Twibot
+import tweepy
 from hashlib import md5
 from time import sleep
 import sys
@@ -70,7 +71,10 @@ def get_hashes(tweets=None):
     hashlist = []
     if not tweets:
         tweets = list(set(bot.api.me().timeline(count=200)))
-    hashlist.extend([get_hash(t.text.encode('utf-8')) for t in tweets])
+    if not (tweets and isinstance(tweets, list)):
+        return
+    if isinstance(tweets[0], tweepy.models.Status):
+        hashlist.extend([get_hash(t.text.encode('utf-8')) for t in tweets])
     return list(set(hashlist))
 
 
