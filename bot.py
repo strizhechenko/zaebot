@@ -72,7 +72,7 @@ def get_hashes(tweets=None):
     if not tweets:
         tweets = list(set(bot.api.me().timeline(count=200)))
     if not (tweets and isinstance(tweets, list)):
-        return
+        return []
     if isinstance(tweets[0], tweepy.models.Status):
         hashlist.extend([get_hash(t.text.encode('utf-8')) for t in tweets])
     return list(set(hashlist))
