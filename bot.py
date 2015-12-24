@@ -60,6 +60,7 @@ def get_maximum_tweets():
     while tweets_temp:
         max_id = tweets_temp[-1].id - 1
         tweets.extend(map(lambda t: t.text, tweets_temp))
+        tweets = list(set(tweets))
         print "200 more... now:", len(tweets)
         sleep(15)
         tweets_temp = bot.api.me().timeline(count=200, max_id=max_id)
@@ -117,7 +118,9 @@ def do_tweets():
 
 
 if __name__ == '__main__':
+    print "at start:", len(hashes)
     hashes.extend(get_hashes(tweets=get_maximum_tweets()))
+    print "after maximum:", len(hashes)
     do_tweets()
     if '--test' in sys.argv:
         do_tweets()
