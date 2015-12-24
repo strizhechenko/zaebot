@@ -60,7 +60,7 @@ def get_maximum_tweets():
     while tweets_temp:
         max_id = tweets_temp[-1].id - 1
         tweets.extend(map(lambda t: t.text, tweets_temp))
-        print "200 more..."
+        print "200 more... now:", len(tweets)
         sleep(15)
         tweets_temp = bot.api.me().timeline(count=200, max_id=max_id)
     return list(set(tweets))
