@@ -51,12 +51,26 @@ def get_hash(tweet):
     return md5(re.sub('[ .,!?-]', '', tweet)).hexdigest()
 
 
-def get_hashes():
+def get_maximum_tweets():
+    """ Тянем твитов сколько получится, чтобы не дублироваться """
+    print "get_maximum_tweets..."
+    tweets = []
+    tweets_temp = bot.api.me().timeline(count=200)
+    while tweets_temp:
+        max_id = tweets_temp[-1].id - 1
+        tweets.extend(map(lambda t: t.text, tweets_temp))
+        print "200 more..."
+        sleep(15)
+        tweets_temp = bot.api.me().timeline(count=200, max_id=max_id)
+    return list(set(tweets))
+
+
+def get_hashes(tweets=None):
     """ хэшики последних 200 своих твитов """
     hashlist = []
-    tweets = list(set(bot.api.me().timeline(count=200)))
-    for tweet in [t.text.encode('utf-8') for t in tweets]:
-        hashlist.append(get_hash(tweet))
+    if not tweets:
+        tweets = list(set(bot.api.me().timeline(count=200)))
+    hashlist.extend([get_hash(t.text.encode('utf-8')) for t in tweets])
     return list(set(hashlist))
 
 
@@ -70,7 +84,7 @@ def process_tweet(tweet, hashlist):
         return
     if isinstance(replaced_tweet, unicode):
         replaced_tweet = replaced_tweet.encode('utf-8')
-    if len(replaced_tweet) > 140*2 - 5: # something wtf after encode
+    if len(replaced_tweet) > 140 * 2 - 5:  # something wtf after encode
         print 'too long :( :', len(replaced_tweet), '__', replaced_tweet, '__'
         return
     if get_hash(replaced_tweet) in hashlist:
@@ -83,9 +97,10 @@ def process_tweet(tweet, hashlist):
 @sched.scheduled_job('interval', minutes=30)
 def do_tweets():
     """ тянем нужные твиты и скармливаем постилке """
-    print "New tick"
+    print "New tick, hashes before update:", len(hashes)
     hashes.extend(get_hashes())
-    for phrase, replaces in replacements.items():
+    print "New tick, hashes after update:", len(hashes)
+    for phrase in replacements.keys():
         sleep(10)
         print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
@@ -98,6 +113,7 @@ def do_tweets():
 
 
 if __name__ == '__main__':
+    hashes.extend(get_hashes(tweets=get_maximum_tweets()))
     do_tweets()
     if '--test' in sys.argv:
         do_tweets()
