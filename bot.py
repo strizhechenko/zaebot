@@ -101,10 +101,10 @@ def do_tweets():
 
 
 if __name__ == '__main__':
-    print "at start:", len(hashes)
     my_tweets = get_maximum_tweets(bot.api.me().timeline)
+    print "before extend: hashes %s, tweets %s" % (len(hashes), len(my_tweets))
     hashes.extend(get_hashes(my_tweets))
-    print "after maximum:", len(hashes)
+    print "after extend: hashes %s, tweets %s" % (len(hashes), len(my_tweets))
     if '--test' in sys.argv:
         do_tweets()
         exit(0)
