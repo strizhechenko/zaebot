@@ -1,19 +1,20 @@
 # coding: utf-8
 """ раз в час пытаемся запостить цитатку про то как надо программировать """
 
+from twitterbot_utils import Twibot
+from twitterbot_utils.TwiUtils import get_hash, get_maximum_tweets
+from twitterbot_utils.TwiUtils import RATE_LIMIT_INTERVAL, tweet_to_text
+
 from apscheduler.schedulers.blocking import BlockingScheduler
-from tweet import Twibot
+
 import tweepy
-from hashlib import md5
 from time import sleep
 import sys
-import re
 
 bot = Twibot()
 sched = BlockingScheduler()
 
 not_hashtag_or_reply = lambda tweet: u'@' not in tweet and u'#' not in tweet
-tweet_to_text = lambda tweet: tweet.text.lower()
 hashes = []
 
 blacklist = (
@@ -45,26 +46,6 @@ def not_blacklisted(tweet):
         if phrase in tweet:
             return False
     return True
-
-
-def get_hash(tweet):
-    """ учитываем что люди тупые и часто немного меняют спизженный твит """
-    return md5(re.sub(u'[^А-Яа-я]', '', tweet)).hexdigest()
-
-
-def get_maximum_tweets(source):
-    """ Тянем твитов сколько получится, чтобы не дублироваться """
-    print "get_maximum_tweets..."
-    tweets = []
-    tweets_temp = source(count=200)
-    while tweets_temp:
-        max_id = tweets_temp[-1].id - 1
-        tweets.extend(map(lambda t: t.text, tweets_temp))
-        tweets = list(set(tweets))
-        print "200 more... now:", len(tweets)
-        sleep(15)
-        tweets_temp = source(count=200, max_id=max_id)
-    return list(set(tweets))
 
 
 def get_hashes(tweets=None):
@@ -100,7 +81,6 @@ def process_tweet(tweet, hashlist):
         return
     print 'post:', replaced_tweet
     bot.tweet(replaced_tweet)
-    sleep(10)
 
 
 @sched.scheduled_job('interval', minutes=30)
@@ -110,7 +90,7 @@ def do_tweets():
     hashes.extend(get_hashes())
     print "New tick, hashes after update:", len(hashes)
     for phrase in replacements.keys():
-        sleep(10)
+        sleep(RATE_LIMIT_INTERVAL)
         print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
         tweets_text = map(tweet_to_text, tweets)
@@ -118,15 +98,17 @@ def do_tweets():
         tweets_text = filter(not_blacklisted, tweets_text)
         for tweet in list(set(tweets_text)):
             process_tweet(tweet, hashes)
+            sleep(RATE_LIMIT_INTERVAL)
     print "Tick end, wait about 30 min"
 
 
 if __name__ == '__main__':
     print "at start:", len(hashes)
-    hashes.extend(get_hashes(tweets=get_maximum_tweets(bot.api.me().timeline)))
+    my_tweets = get_maximum_tweets(bot.api.me().timeline)
+    hashes.extend(get_hashes(my_tweets))
     print "after maximum:", len(hashes)
-    do_tweets()
     if '--test' in sys.argv:
         do_tweets()
         exit(0)
+    do_tweets()
     sched.start()
