@@ -20,7 +20,7 @@ blacklist = (
     u'выпущено 24 кролика', u'учёные выяснили', u'ученые выяснили',
     u'учёные узнали', u'ученые узнали', u'как часто',
     u'психологи узнали', u'психологи выяснили', u'http://',
-    u'https://', u'.com', u't.co',
+    u'https://', u'.com', u't.co', u'сраться',
 )
 
 replacements = {
@@ -49,21 +49,21 @@ def not_blacklisted(tweet):
 
 def get_hash(tweet):
     """ учитываем что люди тупые и часто немного меняют спизженный твит """
-    return md5(re.sub('[ .,!?-]', '', tweet)).hexdigest()
+    return md5(re.sub(u'[^А-Яа-я]', '', tweet)).hexdigest()
 
 
-def get_maximum_tweets():
+def get_maximum_tweets(source):
     """ Тянем твитов сколько получится, чтобы не дублироваться """
     print "get_maximum_tweets..."
     tweets = []
-    tweets_temp = bot.api.me().timeline(count=200)
+    tweets_temp = source(count=200)
     while tweets_temp:
         max_id = tweets_temp[-1].id - 1
         tweets.extend(map(lambda t: t.text, tweets_temp))
         tweets = list(set(tweets))
         print "200 more... now:", len(tweets)
         sleep(15)
-        tweets_temp = bot.api.me().timeline(count=200, max_id=max_id)
+        tweets_temp = source(count=200, max_id=max_id)
     return list(set(tweets))
 
 
@@ -123,7 +123,7 @@ def do_tweets():
 
 if __name__ == '__main__':
     print "at start:", len(hashes)
-    hashes.extend(get_hashes(tweets=get_maximum_tweets()))
+    hashes.extend(get_hashes(tweets=get_maximum_tweets(bot.api.me().timeline)))
     print "after maximum:", len(hashes)
     do_tweets()
     if '--test' in sys.argv:
