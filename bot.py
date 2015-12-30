@@ -79,6 +79,7 @@ def process_tweet(tweet, hashlist):
         return
     print 'post:', replaced_tweet
     bot.tweet(replaced_tweet)
+    sleep(RATE_LIMIT_INTERVAL)
 
 
 @sched.scheduled_job('interval', minutes=30)
@@ -89,14 +90,14 @@ def do_tweets():
     print "New tick, hashes after update:", len(hashes)
     for phrase in replacements.keys():
         sleep(RATE_LIMIT_INTERVAL)
-        print '# search:', phrase.encode('utf-8')
         tweets = bot.api.search(phrase, count=200, result_type='recent')
+        print '# search:', phrase.encode('utf-8'), 'found', len(tweets)
         tweets_text = map(tweet_to_text, tweets)
         tweets_text = filter(not_hashtag_or_reply, tweets_text)
         tweets_text = filter(not_blacklisted, tweets_text)
+        print '- after filter:', len(tweets_text)
         for tweet in list(set(tweets_text)):
             process_tweet(tweet, hashes)
-            sleep(RATE_LIMIT_INTERVAL)
     print "Tick end, wait about 30 min"
 
 
