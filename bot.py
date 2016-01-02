@@ -21,7 +21,7 @@ blacklist = (
     u'выпущено 24 кролика', u'учёные выяснили', u'ученые выяснили',
     u'учёные узнали', u'ученые узнали', u'как часто',
     u'психологи узнали', u'психологи выяснили', u'http://',
-    u'https://', u'.com', u't.co', u'сраться',
+    u'https://', u'.com', u't.co', u'сраться', u'Нарния', u'шкафу'
 )
 
 replacements = {
@@ -62,12 +62,16 @@ def get_hashes(tweets=None):
     return list(set(hashlist))
 
 
-def process_tweet(tweet, hashlist):
-    """ обрабатываем полученные твиты и постим новые """
-    replaced_tweet = tweet
+def apply_replacements(tweet):
     for replaces in replacements.values():
         for word, replace in replaces.items():
-            replaced_tweet = replaced_tweet.replace(word, replace)
+            tweet = tweet.replace(word, replace)
+    return tweet
+
+
+def process_tweet(tweet, hashlist):
+    """ обрабатываем полученные твиты и постим новые """
+    replaced_tweet = apply_replacements(tweet)
     if replaced_tweet == tweet:
         return
     if isinstance(replaced_tweet, unicode):
