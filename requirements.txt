@@ -7,3 +7,6 @@ six==1.9.0
 tweepy==3.1.0
 APScheduler==3.0.0
 twitterbot-utils
+pyopenssl
+ndg-httpsclient
+pyasn1
