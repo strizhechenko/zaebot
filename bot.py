@@ -16,6 +16,7 @@ morphy = Morpher()
 
 @sched.scheduled_job('interval', minutes=15)
 def do_tweets():
+    print 'New tick'
     tweets = reader.api.home_timeline(count=3)
     string = " ".join([tweet.text for tweet in tweets])
     words = morphy.process_to_words(string)
@@ -27,6 +28,7 @@ def do_tweets():
 
 @sched.scheduled_job('interval', hours=24)
 def do_wipe():
+    print 'Wipe time'
     bot.wipe()
 
 if __name__ == '__main__':
