@@ -2,6 +2,7 @@
 __author__ = "@strizhechenko"
 
 import sys
+import os
 
 from morpher import Morpher
 from twitterbot_utils import Twibot
@@ -9,7 +10,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 sched = BlockingScheduler()
 bot = Twibot()
-reader = Twibot(username='strizhechenko')
+reader = Twibot(username=os.environ.get('reader_name'))
 morphy = Morpher()
 
 
