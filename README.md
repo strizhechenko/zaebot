@@ -20,4 +20,5 @@
 ## Воплощения:
 
 - https://twitter.com/vsevsezaebali - читает ленту https://twitter.com/strizhechenko
-- https://twitter.com/memes_zaebot - читает список https://twitter.com/strizhechenko/lists/memes-zaebali/members
+- https://twitter.com/memes_zaebot - читает список [никроблоггеров](https://twitter.com/strizhechenko/lists/memes-zaebali/members) ([отдельная ветка](https://github.com/strizhechenko/zaebot/tree/memes))
+- https://twitter.com/__coding_tips__ - ищет в твиттере сексуальные советы и переделывает их в советы по программированию ([отдельная ветка](https://github.com/strizhechenko/zaebot/tree/__coding_tips__))
