@@ -22,6 +22,7 @@ def do_tweets():
     for word in words:
         tweet = morphy.word2phrase(word)
         bot.tweet(tweet)
+        print 'post', tweet.encode('utf-8')
 
 
 @sched.scheduled_job('interval', hours=24)
