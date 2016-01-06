@@ -1,35 +1,34 @@
 # coding: utf-8
 __author__ = "@strizhechenko"
 
-from time import sleep
-from random import randint
-from tweet import TwibotWriter, TwibotReader
+import sys
+
 from morpher import Morpher
+from twitterbot_utils import Twibot
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+bot = Twibot()
+reader = Twibot(username='strizhechenko')
+morphy = Morpher()
 
 
-class Zaebot():
+@sched.scheduled_job('interval', minutes=15)
+def do_tweets():
+    tweets = reader.api.home_timeline(count=3)
+    string = " ".join([tweet.text for tweet in tweets])
+    words = morphy.process_to_words(string)
+    for word in words:
+        tweet = morphy.word2phrase(word)
+        bot.tweet(tweet)
 
-    def __init__(self):
-        self.writer = TwibotWriter(config='env', user='writer')
-        self.reader = TwibotReader(config='env', user='reader')
-        self.morphy = Morpher()
 
-    def __get_words__(self):
-        tweets = self.reader.fetch()
-        string = " ".join([tweet.text for tweet in tweets])
-        return self.morphy.process_to_words(string)
-
-    def loop(self):
-        tweet_count = 0
-        while True:
-            for word in self.__get_words__():
-                tweet = self.morphy.word2phrase(word)
-                self.writer.tweet(tweet)
-                tweet_count += 1
-            if tweet_count > 100:
-                tweet_count = 0
-                self.writer.wipe()
-            sleep(randint(15, 30) * randint(30, 60))
+@sched.scheduled_job('interval', hours=24)
+def do_wipe():
+    bot.wipe()
 
 if __name__ == '__main__':
-    Zaebot().loop()
+    if '--test' in sys.argv:
+        do_tweets()
+        exit(0)
+    sched.start()
