@@ -10,3 +10,4 @@ setuptools==8.2.1
 six==1.9.0
 tweepy==3.1.0
 twitterbot-utils
+APScheduler==3.0.0
