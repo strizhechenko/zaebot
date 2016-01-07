@@ -1,41 +1,39 @@
+# coding: utf-8
 __author__ = "@strizhechenko"
 
-from time import sleep
-from random import randint
-from tweet import TwibotWriter, TwibotReader
+import sys
+
 from morpher import Morpher
+from twitterbot_utils import Twibot
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+bot = Twibot()
+morphy = Morpher()
 
 
-class Zaebot():
+def tweets2words(tweets):
+    string = " ".join([tweet.text for tweet in tweets])
+    return morphy.process_to_words(string)
 
-    def __init__(self):
-        self.writer = TwibotWriter(user='writer')
-        self.reader = TwibotReader(user='reader')
-        self.morphy = Morpher()
 
-    def tweets2words(self, tweets):
-        string = " ".join([tweet.text for tweet in tweets])
-        return self.morphy.process_to_words(string)
+@sched.scheduled_job('interval', minutes=15)
+def do_tweets():
+    print 'New tick'
+    words = tweets2words(bot.fetch_list(list_id=217926157))
+    for word in words:
+        tweet = morphy.word2phrase(word)
+        bot.tweet(tweet)
+        print 'post', tweet.encode('utf-8')
 
-    def home_timeline_words(self):
-        tweets = self.reader.fetch()
-        return self.tweets2words(tweets)
 
-    def list_words(self, list_id):
-        tweets = self.reader.fetch_list(list_id)
-        return self.tweets2words(tweets)
-
-    def loop(self):
-        tweet_count = 0
-        while True:
-            # for word in self.home_timeline_words():
-            for word in self.list_words(list_id = 217926157):
-                self.writer.tweet(self.morphy.word2phrase(word))
-                tweet_count += 1
-            if tweet_count > 100:
-                tweet_count = 0
-                self.writer.wipe()
-            sleep(randint(15, 30) * randint(30, 60))
+@sched.scheduled_job('interval', hours=24)
+def do_wipe():
+    print 'Wipe time'
+    bot.wipe()
 
 if __name__ == '__main__':
-    Zaebot().loop()
+    do_tweets()
+    if '--test' in sys.argv:
+        exit(0)
+    sched.start()
