@@ -24,23 +24,12 @@ class Morpher(MorphAnalyzer):
             return filter(single, parsed)[0].normal_form
         return parsed[0].normal_form
 
-    def zaeb(self, word):
-        w = self.parse(word)[0]
-        gender = w.tag.gender
-        if w.tag.number == 'plur':
-            return u'Заебали'
-        if gender in self.genders:
-            return self.zaebat.inflect(set([gender])).word
-        return u'Заебись'
-
-    def ru_only(self, string):
+    @staticmethod
+    def ru_only(string):
         return set(map(unicode.lower, re.findall(u'[А-Яа-я]+', string)))
 
-    def process_to_words(self, string):
+    def process_to_words(self, string, count=1):
         words = filter(self.is_noun, self.ru_only(string))
         normal_words = map(self.normalize_word, words)
         shuffle(normal_words)
-        return normal_words[:1]
-
-    def word2phrase(self, word):
-        return "%s %s" % (word, u'- это когда тебя в жопу ебут')
+        return normal_words[:count]

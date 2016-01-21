@@ -1,41 +1,31 @@
 # coding: utf-8
 __author__ = "@strizhechenko"
 
-from time import sleep
-from random import randint
-from tweet import Twibot
+import sys
+import os
+
 from morpher import Morpher
+from twitterbot_utils import Twibot
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+bot = Twibot()
+reader = Twibot(username=os.environ.get('reader_name'))
+morphy = Morpher()
 
 
-class Zaebot():
+@sched.scheduled_job('interval', minutes=15)
+def do_tweets():
+    print 'New tick'
+    tweets = reader.api.home_timeline(count=3)
+    string = " ".join([tweet.text for tweet in tweets])
+    words = morphy.process_to_words(string, count=3)
+    posts = [u"%s - это когда тебя в жопу ебут'" % (word) for word in words]
+    bot.tweet_multiple(posts, logging=True)
 
-    def __init__(self):
-        self.bot = Twibot()
-        self.morphy = Morpher()
-
-    def __get_words__(self):
-        tweets = self.bot.fetch(count=40)
-        print len(tweets)
-        string = " ".join([tweet.text for tweet in tweets])
-        print string.encode('utf-8')
-        return self.morphy.process_to_words(string)
-
-    def loop(self):
-        tweet_count = 0
-        while True:
-            print u'Начало итерации'
-            words = self.__get_words__()
-            if not words:
-                print u'Нет слов'
-            for word in self.__get_words__():
-                print u'Слово: ', word
-                tweet = self.morphy.word2phrase(word)
-                self.bot.tweet(tweet)
-                tweet_count += 1
-            if tweet_count > 100:
-                tweet_count = 0
-                self.bot.wipe()
-            sleep(randint(15, 30) * randint(30, 60))
 
 if __name__ == '__main__':
-    Zaebot().loop()
+    do_tweets()
+    if '--test' in sys.argv:
+        exit(0)
+    sched.start()

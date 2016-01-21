@@ -1,0 +1,3 @@
+#!/bin/bash
+
+heroku config -s | sed -e 's/^/export /'
