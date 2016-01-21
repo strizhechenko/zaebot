@@ -12,7 +12,10 @@ sched = BlockingScheduler()
 bot = Twibot()
 reader = Twibot(username=os.environ.get('reader_name'))
 morphy = Morpher()
-timeout = os.environ.get('timeout') or 30
+try:
+    timeout = int(os.environ['timeout'])
+except Exception:
+    timeout = 30
 
 
 @sched.scheduled_job('interval', minutes=timeout)
