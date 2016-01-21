@@ -20,7 +20,7 @@ def do_tweets():
     tweets = reader.api.home_timeline(count=100)
     string = " ".join([tweet.text for tweet in tweets])
     words = morphy.process_to_words(string, count=100)
-    posts = [u"%s - это когда тебя в жопу ебут'" % (word) for word in words]
+    posts = [u"%s - это когда тебя в жопу ебут." % (word) for word in words]
     bot.tweet_multiple(posts, logging=True)
 
 
