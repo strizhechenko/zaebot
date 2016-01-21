@@ -9,5 +9,5 @@ requests-oauthlib==0.4.2
 setuptools==8.2.1
 six==1.9.0
 tweepy==3.1.0
-twitterbot-utils>=0.0.14
+twitterbot-utils>=0.1.1
 APScheduler==3.0.0
