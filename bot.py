@@ -14,12 +14,12 @@ reader = Twibot(username=os.environ.get('reader_name'))
 morphy = Morpher()
 
 
-@sched.scheduled_job('interval', minutes=15)
+@sched.scheduled_job('interval', minutes=30)
 def do_tweets():
     print 'New tick'
-    tweets = reader.api.home_timeline(count=100)
+    tweets = reader.api.home_timeline(count=3)
     string = " ".join([tweet.text for tweet in tweets])
-    words = morphy.process_to_words(string, count=100)
+    words = morphy.process_to_words(string, count=2)
     posts = [u"%s - это когда тебя в жопу ебут." % (word) for word in words]
     bot.tweet_multiple(posts, logging=True)
 
