@@ -12,9 +12,10 @@ sched = BlockingScheduler()
 bot = Twibot()
 reader = Twibot(username=os.environ.get('reader_name'))
 morphy = Morpher()
+timeout = os.environ.get('timeout') or 30
 
 
-@sched.scheduled_job('interval', minutes=30)
+@sched.scheduled_job('interval', minutes=timeout)
 def do_tweets():
     print 'New tick'
     tweets = reader.api.home_timeline(count=3)
@@ -22,6 +23,7 @@ def do_tweets():
     words = morphy.process_to_words(string, count=2)
     posts = [u"%s - это когда тебя в жопу ебут." % (word) for word in words]
     bot.tweet_multiple(posts, logging=True)
+    print 'Wait for', timeout, 'minutes'
 
 
 if __name__ == '__main__':
