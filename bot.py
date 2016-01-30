@@ -1,35 +1,42 @@
 # coding: utf-8
-__author__ = "@strizhechenko"
+
+"""
+Бот, собирает существительные из ленты одного пользователя, подставляет их в
+шаблон из environ и постит несколько твитов
+"""
 
 import sys
 import os
-
-from morpher import Morpher
-from twitterbot_utils import Twibot
 from apscheduler.schedulers.blocking import BlockingScheduler
+from twitterbot_utils import Twibot
+from morpher import Morpher
 
-sched = BlockingScheduler()
-bot = Twibot()
-reader = Twibot(username=os.environ.get('reader_name'))
-morphy = Morpher()
-timeout = int(os.environ.get('timeout', 30))
-template = unicode(os.environ.get('template', u''), 'utf-8')
-tweet_grab = int(os.environ.get('tweet_grab', 3))
-tweets_per_tick = int(os.environ.get('tweets_per_tick', 2))
+__author__ = "@strizhechenko"
 
-@sched.scheduled_job('interval', minutes=timeout)
+SCHED = BlockingScheduler()
+BOT = Twibot()
+READER = Twibot(username=os.environ.get('reader_name'))
+MORPHY = Morpher()
+TIMEOUT = int(os.environ.get('timeout', 30))
+TEMPLATE = unicode(os.environ.get('template', u''), 'utf-8')
+TWEET_GRAB = int(os.environ.get('tweet_grab', 3))
+TWEETS_PER_TICK = int(os.environ.get('tweets_per_tick', 2))
+
+
+@SCHED.scheduled_job('interval', minutes=TIMEOUT)
 def do_tweets():
+    """ периодические генерация и постинг твитов """
     print 'New tick'
-    tweets = reader.api.home_timeline(count=tweet_grab)
+    tweets = READER.api.home_timeline(count=TWEET_GRAB)
     string = " ".join([tweet.text for tweet in tweets])
-    words = morphy.process_to_words(string, count=tweets_per_tick)
-    posts = [template % (word) for word in words]
-    bot.tweet_multiple(posts, logging=True)
-    print 'Wait for', timeout, 'minutes'
+    words = MORPHY.process_to_words(string, count=TWEETS_PER_TICK)
+    posts = [TEMPLATE % (word) for word in words]
+    BOT.tweet_multiple(posts, logging=True)
+    print 'Wait for', TIMEOUT, 'minutes'
 
 
 if __name__ == '__main__':
     do_tweets()
     if '--test' in sys.argv:
         exit(0)
-    sched.start()
+    SCHED.start()
