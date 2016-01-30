@@ -8,7 +8,7 @@
 import sys
 import os
 from apscheduler.schedulers.blocking import BlockingScheduler
-from twitterbot_utils import Twibot
+from twitterbot_utils import Twibot, get_maximum_tweets
 from morpher import Morpher
 
 __author__ = "@strizhechenko"
@@ -21,6 +21,7 @@ TIMEOUT = int(os.environ.get('timeout', 30))
 TEMPLATE = unicode(os.environ.get('template', u''), 'utf-8')
 TWEET_GRAB = int(os.environ.get('tweet_grab', 3))
 TWEETS_PER_TICK = int(os.environ.get('tweets_per_tick', 2))
+POSTED = get_maximum_tweets(BOT.api.home_timeline)
 
 
 @SCHED.scheduled_job('interval', minutes=TIMEOUT)
@@ -31,6 +32,7 @@ def do_tweets():
     string = " ".join([tweet.text for tweet in tweets])
     words = MORPHY.process_to_words(string, count=TWEETS_PER_TICK)
     posts = [TEMPLATE % (word) for word in words]
+    posts = [post for post in posts if post not in POSTED]
     BOT.tweet_multiple(posts, logging=True)
     print 'Wait for', TIMEOUT, 'minutes'
 
