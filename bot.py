@@ -34,10 +34,14 @@ def do_tweets():
     posts = [TEMPLATE % (word) for word in words]
     posts = [post for post in posts if post not in POSTED]
     BOT.tweet_multiple(posts, logging=True)
+    POSTED.extend(posts)
     print 'Wait for', TIMEOUT, 'minutes'
 
 
 if __name__ == '__main__':
+    if '--wipe' in sys.argv:
+        BOT.wipe()
+        exit(0)
     do_tweets()
     if '--test' in sys.argv:
         exit(0)
